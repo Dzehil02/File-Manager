@@ -1,5 +1,5 @@
 import readlinePromises from "readline/promises";
-import { getUsername } from "./user/userApi.js";
+import { getUsername } from "./api/userApi.js";
 import { showList } from "./dirNav/ls.js";
 import { upDir } from "./dirNav/up.js";
 import { goToTheDir } from "./dirNav/cd.js";
@@ -9,6 +9,10 @@ import { rename } from "./fileOps/rename.js";
 import { copy } from "./fileOps/copy.js";
 import { move } from "./fileOps/move.js";
 import { read } from "./fileOps/read.js";
+import { calculateHash } from "./hash/calcHash.js";
+import { compress } from "./zip/compress.js";
+import { decompress } from "./zip/decompress.js";
+import {getPathToCurrentDirectory} from './api/api.js';
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -19,8 +23,6 @@ const __dirname = path.dirname(__filename);
 const username = getUsername();
 const welcomeMessage = `Welcome to the File Manager, ${username}!`;
 const goodbyeMessage = `Thank you for using File Manager, ${username}, goodbye!`;
-const getPathToCurrentDirectory = () =>
-  console.log(`You are currently in ${process.cwd()}`);
 
 console.log(welcomeMessage);
 getPathToCurrentDirectory();
@@ -85,6 +87,23 @@ rl.on("line", (line) => {
   if (line.startsWith("cat")) {
     const pathToFile = line.slice(4);
     read(pathToFile);
+  }
+
+  if (line.startsWith("hash")) {
+    const pathToFile = line.slice(5);
+    calculateHash(pathToFile);
+  }
+
+  if (line.startsWith("compress")) {
+    const args = line.split(" ");
+    const [_, pathToFile, pathToDestination] = args;
+    compress(pathToFile, pathToDestination);
+  }
+
+  if (line.startsWith("decompress")) {
+    const args = line.split(" ");
+    const [_, pathToFile, pathToDestination] = args;
+    decompress(pathToFile, pathToDestination);
   }
 
   getPathToCurrentDirectory();

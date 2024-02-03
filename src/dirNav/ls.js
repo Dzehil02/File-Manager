@@ -1,38 +1,39 @@
-import fs from 'fs';
+import fs from "fs";
+import { getPathToCurrentDirectory } from "../api/api.js";
 
 export const showList = async () => {
-    const pathToFiles = process.cwd();
-    const structDatas = [];
+  const pathToFiles = process.cwd();
+  const structDatas = [];
 
-    try {
-      if (!fs.existsSync(pathToFiles)) {
-        throw Error(`${pathToFiles}: doesn't exist`);
+  try {
+    if (!fs.existsSync(pathToFiles)) {
+      throw Error(`${pathToFiles}: doesn't exist`);
+    }
+
+    fs.readdir(pathToFiles, { withFileTypes: true }, (err, files) => {
+      if (err) {
+        return console.log(err);
       }
 
-      fs.readdir(pathToFiles, { withFileTypes: true }, (err, files) => {
-        if (err) {
-          return console.log(err);
-        }
-
-        files.forEach((file) => {
-            let obj = {
-                Name: file.name,
-                Type: file.isDirectory() ? 'directory' : 'file'
-            }
-            structDatas.push(obj)
-        });
-
-        structDatas.sort((a, b) => {
-            if (a.Type > b.Type) return 1;
-            if (a.Type < b.Type) return -1;
-            if (a.Name > b.Name) return 1;
-            if (a.Name < b.Name) return -1;
-            return 0;
-          });
-        console.table(structDatas);
-        console.log(process.cwd())
+      files.forEach((file) => {
+        let obj = {
+          Name: file.name,
+          Type: file.isDirectory() ? "directory" : "file",
+        };
+        structDatas.push(obj);
       });
-    } catch (error) {
-      console.log(error.message);
-    }
-}
+
+      structDatas.sort((a, b) => {
+        if (a.Type > b.Type) return 1;
+        if (a.Type < b.Type) return -1;
+        if (a.Name > b.Name) return 1;
+        if (a.Name < b.Name) return -1;
+        return 0;
+      });
+      console.table(structDatas);
+      getPathToCurrentDirectory();
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
