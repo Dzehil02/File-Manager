@@ -33,6 +33,6 @@ export const showList = async () => {
         console.log(process.cwd())
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
 }

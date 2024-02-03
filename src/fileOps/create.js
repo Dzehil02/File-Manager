@@ -11,6 +11,6 @@ export const create = async (fileName) => {
       }
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
