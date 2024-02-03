@@ -1,8 +1,12 @@
-import readlinePromises from 'readline/promises';
-import {getUsername} from './user/userApi.js';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import readlinePromises from "readline/promises";
+import { getUsername } from "./user/userApi.js";
+import { showList } from "./dirNav/ls.js";
+import { upDir } from "./dirNav/up.js";
+import { goToTheDir } from "./dirNav/cd.js";
+import { create } from "./fileOps/create.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,60 +14,45 @@ const __dirname = path.dirname(__filename);
 const username = getUsername();
 const welcomeMessage = `Welcome to the File Manager, ${username}!`;
 const goodbyeMessage = `Thank you for using File Manager, ${username}, goodbye!`;
-const pathToWorkingDirectory = `You are currently in ${process.cwd()}`;
+const getPathToCurrentDirectory = () =>
+  console.log(`You are currently in ${process.cwd()}`);
 
 console.log(welcomeMessage);
-console.log(pathToWorkingDirectory);
+getPathToCurrentDirectory();
 
 const rl = readlinePromises.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+  input: process.stdin,
+  output: process.stdout,
 });
 
-rl.on('SIGINT', () => {
+rl.on("SIGINT", () => {
+  console.log(goodbyeMessage);
+  process.exit(0);
+});
+
+rl.on("line", (line) => {
+  if (line === ".exit") {
     console.log(goodbyeMessage);
     process.exit(0);
-  });
+  }
 
-rl.on('line', (line) => {
+  if (line === "ls") {
+    showList();
+  }
 
-    if (line === '.exit') {
-        console.log(goodbyeMessage);
-        process.exit(0);
-    }
+  if (line === "up") {
+    upDir();
+  }
 
-    if (line === 'ls') {
-        console.log('YOU WRITTEN LS')
-    }
+  if (line.startsWith("cd")) {
+    const partOfPathName = line.slice(3);
+    goToTheDir(partOfPathName);
+  }
 
-    if (line === 'up') {
-        const currentPath = process.cwd();
-        console.log(`current path: ${currentPath}`)
-        const pathParts = currentPath.split(path.sep);
-        console.log(`parts of path: ${pathParts}`)
-        if (pathParts.length > 1) {
-            pathParts.pop();
-            const newPath = pathParts.join(path.sep).endsWith(':') ? pathParts.join(path.sep) + path.sep : pathParts.join(path.sep)
-            process.chdir(newPath)
-        }
-    }
+  if (line.startsWith("add")) {
+    const fileName = line.slice(4);
+    create(fileName);
+  }
 
-    if (line.startsWith('cd')) {
-        try {
-            const partOfPathName = line.slice(3);
-            const pathToFolder = path.join(process.cwd(), partOfPathName);
-            if (!fs.existsSync(pathToFolder)) {
-                throw Error(`${partOfPathName} doesn't exist`)
-            }
-            process.chdir(pathToFolder)
-        } catch (error) {
-            console.log(error.message)
-        }
-
-    }
-
-    console.log(process.cwd())
-
-})
-
-
+  getPathToCurrentDirectory();
+});
