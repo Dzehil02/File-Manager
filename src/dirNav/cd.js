@@ -1,13 +1,14 @@
 import path from 'path';
 import fs from 'fs';
+import { OPERATION_FAILED } from '../const/const.js';
 
-export const goToTheDir = (partOfPathName) => {
+export const goToTheDir = (pathToDirectory) => {
     try {
-        const pathToFolder = path.join(process.cwd(), partOfPathName);
-        if (!fs.existsSync(pathToFolder)) {
-          throw Error(`${partOfPathName} doesn't exist`);
+        const absolutePath = path.resolve(process.cwd(), pathToDirectory);
+        if (!fs.existsSync(absolutePath)) {
+          throw Error(OPERATION_FAILED);
         }
-        process.chdir(pathToFolder);
+        process.chdir(absolutePath);
       } catch (error) {
         console.log(error.message);
       }

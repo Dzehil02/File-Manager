@@ -1,10 +1,11 @@
 import { createBrotliDecompress } from "zlib";
 import fs from "fs";
+import { OPERATION_FAILED } from "../const/const.js";
 
 export const decompress = async (file, pathToDestination) => {
   try {
     if (!fs.existsSync(file)) {
-      throw Error(`File on the path: ${file} doesn't exist`);
+      throw Error(OPERATION_FAILED);
     }
     const readStream = fs.createReadStream(file);
     const writeStream = fs.createWriteStream(pathToDestination);

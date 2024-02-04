@@ -1,16 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { OPERATION_FAILED } from "../const/const.js";
 
 export const read = async (pathToFile) => {
   try {
     const pathToReadFile = path.join(process.cwd(), pathToFile);
 
     if (!fs.existsSync(pathToReadFile)) {
-      throw Error(`File on the path: ${pathToReadFile} doesn't exist`);
+      throw Error(OPERATION_FAILED);
     }
 
     const readSteam = fs.createReadStream(pathToReadFile);
@@ -20,11 +17,11 @@ export const read = async (pathToFile) => {
     });
 
     readSteam.on("end", () => {
-        console.log(`You are currently in ${process.cwd()}`);
+      console.log(`You are currently in ${process.cwd()}`);
     });
 
     readSteam.on("error", (error) => {
-      console.error("Error reading the file: ", error);
+      console.error(OPERATION_FAILED);
     });
   } catch (error) {
     console.error(error.message);

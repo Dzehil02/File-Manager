@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
+import { OPERATION_FAILED } from "../const/const.js";
 
 const unlink = promisify(fs.unlink);
 
@@ -9,7 +10,7 @@ export const deleteFile = async (pathToFile) => {
 
   try {
     if (!fs.existsSync(pathToFileToRemove)) {
-      throw Error(`File on the path: ${pathToFileToRemove} doesn't exist`);
+      throw Error(OPERATION_FAILED);
     }
 
     await unlink(pathToFileToRemove);

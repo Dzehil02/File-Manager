@@ -1,5 +1,6 @@
 import fs from "fs";
 import { getPathToCurrentDirectory } from "../api/api.js";
+import { OPERATION_FAILED } from "../const/const.js";
 
 export const showList = async () => {
   const pathToFiles = process.cwd();
@@ -7,7 +8,7 @@ export const showList = async () => {
 
   try {
     if (!fs.existsSync(pathToFiles)) {
-      throw Error(`${pathToFiles}: doesn't exist`);
+      throw Error(OPERATION_FAILED);
     }
 
     fs.readdir(pathToFiles, { withFileTypes: true }, (err, files) => {

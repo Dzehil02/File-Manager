@@ -1,4 +1,5 @@
 import path from 'path';
+import { OPERATION_FAILED } from '../const/const.js';
 
 export const upDir = () => {
     try {
@@ -10,6 +11,6 @@ export const upDir = () => {
           process.chdir(newPath);
         }
       } catch (error) {
-        console.error("Error changing directory:", error.message);
+        console.error(OPERATION_FAILED);
       }
 }

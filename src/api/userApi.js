@@ -1,4 +1,4 @@
-export const getUsername = () => {
+const getUsername = () => {
     let name = "Username";
   
     if (process.argv.length > 2) {
@@ -7,3 +7,7 @@ export const getUsername = () => {
     }
     return name;
   };
+
+const username = getUsername();
+export const welcomeMessage = `Welcome to the File Manager, ${username}!`;
+export const goodbyeMessage = `Thank you for using File Manager, ${username}, goodbye!`;

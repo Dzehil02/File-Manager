@@ -1,5 +1,5 @@
 import readlinePromises from "readline/promises";
-import { getUsername } from "./api/userApi.js";
+import { welcomeMessage, goodbyeMessage } from "./api/userApi.js";
 import { showList } from "./dirNav/ls.js";
 import { upDir } from "./dirNav/up.js";
 import { goToTheDir } from "./dirNav/cd.js";
@@ -12,17 +12,15 @@ import { read } from "./fileOps/read.js";
 import { calculateHash } from "./hash/calcHash.js";
 import { compress } from "./zip/compress.js";
 import { decompress } from "./zip/decompress.js";
-import {getPathToCurrentDirectory} from './api/api.js';
-import fs from "fs";
+import {getOsInfo} from './os/os.js';
+import { getPathToCurrentDirectory } from "./api/api.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const username = getUsername();
-const welcomeMessage = `Welcome to the File Manager, ${username}!`;
-const goodbyeMessage = `Thank you for using File Manager, ${username}, goodbye!`;
+
 
 console.log(welcomeMessage);
 getPathToCurrentDirectory();
@@ -52,12 +50,13 @@ rl.on("line", (line) => {
   }
 
   if (line.startsWith("cd")) {
-    const partOfPathName = line.slice(3);
-    goToTheDir(partOfPathName);
+    const pathToDirectory = line.slice(3);
+    goToTheDir(pathToDirectory);
   }
 
   if (line.startsWith("add")) {
     const fileName = line.slice(4);
+    console.log(line.split(' '))
     create(fileName);
   }
 
@@ -104,6 +103,18 @@ rl.on("line", (line) => {
     const args = line.split(" ");
     const [_, pathToFile, pathToDestination] = args;
     decompress(pathToFile, pathToDestination);
+  }
+
+  if (line.startsWith("os")) {
+    const args = line.split(" ");
+    const [_, flag] = args;
+    getOsInfo(flag);
+  }
+
+  // функция для проверки переданных аргументов. Не забыть удалить!!!!
+  if (line.startsWith("ch")) {
+    const args = line.split(" ");
+    console.log(args);
   }
 
   getPathToCurrentDirectory();
