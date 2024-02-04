@@ -1,12 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { OPERATION_FAILED } from "../const/const.js";
+import { INVALID_INPUT, OPERATION_FAILED } from "../const/const.js";
 
 
 export const copy = async (pathToFile, pathToNewDirectory) => {
   try {
-    if (fs.statSync(pathToFile).isDirectory()) {
-      throw Error(OPERATION_FAILED);
+    
+    if (!pathToFile || !pathToNewDirectory) {
+      throw Error(INVALID_INPUT);
     }
     if (!fs.existsSync(pathToFile)) {
       throw Error(OPERATION_FAILED);
@@ -25,12 +26,12 @@ export const copy = async (pathToFile, pathToNewDirectory) => {
 
     readSteam.pipe(writeStream);
 
-    readSteam.on("error", (error) => {
-      console.error("Error reading the file: ", error.message);
+    readSteam.on("error", () => {
+      console.log(OPERATION_FAILED);
     });
 
-    writeStream.on("error", (error) => {
-      console.error("Error writing the file: ", error.message);
+    writeStream.on("error", () => {
+      console.log(OPERATION_FAILED);
     });
   } catch (error) {
     console.log(error.message);

@@ -7,7 +7,7 @@ export const create = async (fileName) => {
   try {
     fs.writeFile(currentPath, '', (err) => {
       if (err) {
-        return console.log(OPERATION_FAILED);
+        console.log(OPERATION_FAILED);
       }
     });
   } catch (error) {

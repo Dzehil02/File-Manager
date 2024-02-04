@@ -1,11 +1,14 @@
 import fs from "fs";
 import path from "path";
 import { deleteFile } from "./delete.js";
-import { OPERATION_FAILED } from "../const/const.js";
-import { getPathToCurrentDirectory } from "../api/api.js";
+import { INVALID_INPUT, OPERATION_FAILED } from "../const/const.js";
 
 export const move = async (pathToFile, pathToNewDirectory) => {
   try {
+
+    if (!pathToFile || !pathToNewDirectory) {
+      throw Error(INVALID_INPUT);
+    }
     if (!fs.existsSync(pathToFile)) {
       throw Error(OPERATION_FAILED);
     }
@@ -25,15 +28,14 @@ export const move = async (pathToFile, pathToNewDirectory) => {
 
     readSteam.on("end", () => {
       deleteFile(pathToFile);
-      getPathToCurrentDirectory();
     });
 
-    readSteam.on("error", (error) => {
-      console.error("Error reading the file: ", error);
+    readSteam.on("error", () => {
+      console.error(OPERATION_FAILED);
     });
 
-    writeStream.on("error", (error) => {
-      console.error("Error writing the file: ", error);
+    writeStream.on("error", () => {
+      console.error(OPERATION_FAILED);
     });
   } catch (error) {
     console.log(error.message);

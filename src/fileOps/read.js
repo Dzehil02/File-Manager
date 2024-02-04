@@ -1,26 +1,30 @@
 import fs from "fs";
 import path from "path";
-import { OPERATION_FAILED } from "../const/const.js";
+import { INVALID_INPUT, OPERATION_FAILED } from "../const/const.js";
+import { getPathToCurrentDirectory } from "../api/api.js";
 
 export const read = async (pathToFile) => {
   try {
-    const pathToReadFile = path.join(process.cwd(), pathToFile);
+    const absolutePath = path.resolve(process.cwd(), pathToFile);
 
-    if (!fs.existsSync(pathToReadFile)) {
+    if (!pathToFile) {
+      throw Error(INVALID_INPUT);
+    }
+    if (!fs.existsSync(absolutePath)) {
       throw Error(OPERATION_FAILED);
     }
 
-    const readSteam = fs.createReadStream(pathToReadFile);
+    const readSteam = fs.createReadStream(absolutePath);
 
     readSteam.on("data", (chunk) => {
       console.log(chunk.toString());
     });
 
     readSteam.on("end", () => {
-      console.log(`You are currently in ${process.cwd()}`);
+      getPathToCurrentDirectory();
     });
 
-    readSteam.on("error", (error) => {
+    readSteam.on("error", () => {
       console.error(OPERATION_FAILED);
     });
   } catch (error) {
