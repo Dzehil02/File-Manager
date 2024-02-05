@@ -7,7 +7,7 @@ export const getOsInfo = async (flag) => {
       os.cpus().map((proc) => {
         return {
           model: proc.model,
-          speed: proc.speed,
+          speed: `${(proc.speed/1000).toFixed(2)} Ghz`,
         };
       });
     const getEOL = () => os.EOL;
