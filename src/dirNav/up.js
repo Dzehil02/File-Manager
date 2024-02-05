@@ -6,11 +6,11 @@ export const upDir = () => {
         const currentPath = process.cwd();
         const pathParts = currentPath.split(path.sep);
         if (pathParts.length > 1) {
-          pathParts.pop();
-          const newPath = path.join("..");
-          process.chdir(newPath);
+            pathParts.pop();
+            const newPath = path.join('..');
+            process.chdir(newPath);
         }
-      } catch (error) {
+    } catch (error) {
         console.error(OPERATION_FAILED);
-      }
-}
+    }
+};

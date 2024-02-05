@@ -6,10 +6,10 @@ export const goToTheDir = (pathToDirectory) => {
     try {
         const absolutePath = path.resolve(process.cwd(), pathToDirectory);
         if (!fs.existsSync(absolutePath)) {
-          throw Error(OPERATION_FAILED);
+            throw Error(OPERATION_FAILED);
         }
         process.chdir(absolutePath);
-      } catch (error) {
+    } catch (error) {
         console.log(error.message);
-      }
-}
+    }
+};
